@@ -79,19 +79,40 @@ class Muon(Candidate):
         super(Muon, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
 
+    def _p4(self):
+        pt = self.get('rochesterPt')
+        eta = self.get('eta')
+        phi = self.get('phi')
+        m = self.get('mass')
+        p4 = ROOT.TLorentzVector()
+        p4.SetPtEtaPhiM(pt,eta,phi,m)
+        if pt<100:
+            if self.shift=='MuonEnUp': p4 *= 1+0.002
+            if self.shift=='MuonEnDown': p4 *= 1-0.002
+        else:
+            if self.shift=='MuonEnUp': p4 *= 1+0.05
+            if self.shift=='MuonEnDown': p4 *= 1-0.05
+        return p4
+
     def pt(self):
-        var = 'rochesterPt'
+        # instead, because the rochester was applied to the base and not to the energy shifts, calculate manually
+        # TODO: need to correct MET
+        #var = 'rochesterPt'
         #var = 'pt'
-        if self.shift=='MuonEnUp': var = 'pt_muonEnUp'
-        if self.shift=='MuonEnDown': var = 'pt_muonEnDown'
-        return self.get(var)
+        #if self.shift=='MuonEnUp': var = 'pt_muonEnUp'
+        #if self.shift=='MuonEnDown': var = 'pt_muonEnDown'
+        #return self.get(var)
+        p4 = self._p4()
+        return p4.Pt()
 
     def energy(self):
-        var = 'rochesterEnergy'
+        #var = 'rochesterEnergy'
         #var = 'energy'
-        if self.shift=='MuonEnUp': var = 'energy_muonEnUp'
-        if self.shift=='MuonEnDown': var = 'energy_muonEnDown'
-        return self.get(var)
+        #if self.shift=='MuonEnUp': var = 'energy_muonEnUp'
+        #if self.shift=='MuonEnDown': var = 'energy_muonEnDown'
+        #return self.get(var)
+        p4 = self._p4()
+        return p4.Energy()
 
 ################
 ### Electron ###
@@ -207,8 +228,8 @@ class Met(Candidate):
         var = 'et'
         if self.shift=='ElectronEnUp':      var = 'et_electronEnUp'
         if self.shift=='ElectronEnDown':    var = 'et_electronEnDown'
-        if self.shift=='MuonEnUp':          var = 'et_muonEnUp'
-        if self.shift=='MuonEnDown':        var = 'et_muonEnDown'
+        if self.shift=='MuonEnUp':          var = 'et_muonEnUp' # TODO, need to fix to work with Roch, but probably doesn't matter
+        if self.shift=='MuonEnDown':        var = 'et_muonEnDown' # TODO
         if self.shift=='TauEnUp':           var = 'et_tauEnUp'
         if self.shift=='TauEnDown':         var = 'et_tauEnDown'
         if self.shift=='PhotonEnUp':        var = 'et_photonEnUp'

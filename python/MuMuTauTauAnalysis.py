@@ -508,38 +508,8 @@ class MuMuTauTauAnalysis(AnalysisBase):
 
         return candidate
 
-    #def getGenCandidates(self):
-    #    if 'SUSYGluGluToHToAA_AToMuMu_AToTauTau' not in self.fileNames[0]:
-    #        return {}
-    #    gmuons = [g for g in self.gen if abs(g.pdgId())==13]
-    #    gtaus = [g for g in self.gen if abs(g.pdgId())==15]
-    #    gas = [g for g in self.gen if abs(g.pdgId())==36]
-    #    ghs = [g for g in self.gen if abs(g.pdgId()) in [25,35]]
-
-    #    gmfromas = [g for g in gmuons if g.mother_1()==36 or g.mother_2()==36]
-    #    gtfromas = [g for g in gtaus if g.mother_1()==36 or g.mother_2()==36]
-
-    #    # clean the jets
-    #    candidate['cleanJets'] = self.cleanCands(self.jets,[am1,am2,atm,ath],0.4)
-    #    candidate['cleanJetsDR08'] = self.cleanCands(candidate['cleanJets'],[ath],0.8)
-
-    #    # match jet to tau
-    #    dr = 999
-    #    j = None
-    #    for jet in self.jets:
-    #        jt = DiCandidate(jet,ath)
-    #        if jt.deltaR()<dr:
-    #            j = jet
-    #            dr = jt.deltaR()
-    #    if j:
-    #        candidate['athjet'] = j
-
-    #    candidate.update(self.getGenCandidates())
-
-    #    return candidate
-
     def getGenCandidates(self):
-        if 'SUSYGluGluToHToAA_AToMuMu_AToTauTau' not in self.fileNames[0]:
+        if 'SUSY' not in self.fileNames[0]:
             return {}
         gmuons = [g for g in self.gen if abs(g.pdgId())==13]
         gtaus = [g for g in self.gen if abs(g.pdgId())==15]
