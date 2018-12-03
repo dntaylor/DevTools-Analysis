@@ -101,23 +101,23 @@ class DYAnalysis(AnalysisBase):
         #self.addDiCandVar('z','z1','z2','mass_uncorrected','mass','F',uncorrected=True)
         #self.tree.add(lambda cands: self.zeppenfeld(cands,cands['z1'],cands['z2']), 'z_zeppenfeld','F')
         self.addLepton('z1')
-        self.tree.add(lambda cands: self.passMedium(cands['z1']), 'z1_passMedium', 'I')
-        self.tree.add(lambda cands: self.passTight(cands['z1']), 'z1_passTight', 'I')
-        self.tree.add(lambda cands: self.looseScale(cands['z1'])[0], 'z1_looseScale', 'F')
-        self.tree.add(lambda cands: self.mediumScale(cands['z1'])[0], 'z1_mediumScale', 'F')
-        self.tree.add(lambda cands: self.tightScale(cands['z1'])[0], 'z1_tightScale', 'F')
+        self.addDetailedMuon('z1')
         self.addLepton('z2')
-        self.tree.add(lambda cands: self.passMedium(cands['z2']), 'z2_passMedium', 'I')
-        self.tree.add(lambda cands: self.passTight(cands['z2']), 'z2_passTight', 'I')
-        self.tree.add(lambda cands: self.looseScale(cands['z2'])[0], 'z2_looseScale', 'F')
-        self.tree.add(lambda cands: self.mediumScale(cands['z2'])[0], 'z2_mediumScale', 'F')
-        self.tree.add(lambda cands: self.tightScale(cands['z2'])[0], 'z2_tightScale', 'F')
+        self.addDetailedMuon('z2')
 
         # met
         self.addMet('met')
 
         # other event
         self.tree.add(lambda cands: sum([x.pt() for x in cands['cleanJets']]), 'ht', 'F')
+
+    def passMuon(self,cand):
+        if cand.pt()<3: return False
+        if not cand.isPFMuon(): return False
+        if not (cand.isGlobalMuon() or cand.isTrackerMuon()): return False
+        if abs(cand.dxy())>=0.2: return False
+        if abs(cand.dz())>=0.5: return False
+        return True
 
     ############################
     ### select DY candidates ###
@@ -133,7 +133,7 @@ class DYAnalysis(AnalysisBase):
 
         # get leptons
         #leps = self.getPassingCands('Loose')
-        medLeps = [m for m in self.muons if m.isLooseMuon()]
+        medLeps = [m for m in self.muons if self.passMuon(m)]
         if len(medLeps)<2: return candidate # need at least 2 leptons
 
         # get invariant masses

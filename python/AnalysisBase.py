@@ -70,6 +70,9 @@ class AnalysisBase(object):
             self.fileNames = inputFileNames          # already a python list or a cms.untracked.vstring()
         if not isinstance(outputFileName, basestring): # its a cms.string(), get value
             outputFileName = outputFileName.value()
+        if not self.fileNames:
+            logging.error('File list empty')
+            raise ValueError
         # test for hdfs
         #self.hasHDFS = os.path.exists('/hdfs/store/user')
         self.hasHDFS = False
