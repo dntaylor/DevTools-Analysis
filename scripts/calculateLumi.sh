@@ -2,8 +2,10 @@
 version=`python -c "from DevTools.Utilities.utilities import getCMSSWVersion; print getCMSSWVersion()"`
 if [ "$version" == "76X" ]; then
     runPeriod="Collisions15"
-else
+elif [ "$version" == "80X" ]; then
     runPeriod="Collisions16"
+else
+    runPeriod="Collisions17"
 fi
 lumimask=`python -c "from DevTools.Utilities.utilities import getJson; print getJson('$runPeriod')"`
 normtag=`python -c "from DevTools.Utilities.utilities import getNormtag; print getNormtag('$runPeriod')"`

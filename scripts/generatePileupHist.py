@@ -17,11 +17,14 @@ def main(argv=None):
         # 76X samples with pileup matching data
         from SimGeneral.MixingModule.mix_2015_25ns_FallMC_matchData_PoissonOOTPU_cfi import mix
         pileupDist = [float(x) for x in mix.input.nbPileupEvents.probValue]
-    else:
+    elif getCMSSWVersion() == '80X':
         # 80X sample with startup pileup
         #from SimGeneral.MixingModule.mix_2016_25ns_SpringMC_PUScenarioV1_PoissonOOTPU_cfi import mix
         # 80X moriond pileup
         from SimGeneral.MixingModule.mix_2016_25ns_Moriond17MC_PoissonOOTPU_cfi import mix
+        pileupDist = [float(x) for x in mix.input.nbPileupEvents.probValue]
+    else:
+        from SimGeneral.MixingModule.mix_2017_25ns_WinterMC_PUScenarioV1_PoissonOOTPU_cfi import mix
         pileupDist = [float(x) for x in mix.input.nbPileupEvents.probValue]
 
     rootfile = ROOT.TFile(fileName,'recreate')
@@ -35,7 +38,7 @@ def main(argv=None):
     histmc.Write()
     
     # read data
-    for datatype in ['','_up','_down','_60000','_61000','_62000','_63000','_64000','_65000','_66000','_67000','_68000','_69000','_70000','_71000','_72000','_73000','_74000','_75000','_76000','_77000','_78000','_79000','_80000']:
+    for datatype in ['','_up','_down']:#,'_60000','_61000','_62000','_63000','_64000','_65000','_66000','_67000','_68000','_69000','_70000','_71000','_72000','_73000','_74000','_75000','_76000','_77000','_78000','_79000','_80000']:
         dataFileName = 'pileup/PileUpData{0}.root'.format(datatype)
         datafile = ROOT.TFile(dataFileName)
         histdata = datafile.Get(histName)

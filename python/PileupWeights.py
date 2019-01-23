@@ -14,12 +14,15 @@ class PileupWeights(object):
         self.version = version
         if version == '76X':
             if not profile: profile = 'PU25nsData2015v1'
-        else:
+        elif version == '80X':
             if not profile: profile = 'PUMoriond17'
+        else:
+            if not profile: profile = 'PU2017'
 
         paths = {
             ('76X','PU25nsData2015v1') : 'pileup_RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12.root',
             ('80X','PUMoriond17')      : 'pileup_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6.root',
+            ('94X','PU2017')           : 'pileup_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14.root',
         }
 
         self.skip = (version,profile) not in paths
@@ -43,11 +46,11 @@ class PileupWeights(object):
         hist_scale = rootfile.Get('pileup_scale_down')
         for b in range(hist_scale.GetNbinsX()):
             self.scale_down[b] = hist_scale.GetBinContent(b+1)
-        for xsec in [60000,61000,62000,63000,64000,65000,66000,67000,68000,69000,70000,71000,72000,73000,74000,75000,76000,77000,78000,79000,80000]:
-            self.alt_scales[xsec] = {}
-            hist_scale = rootfile.Get('pileup_scale_{0}'.format(xsec))
-            for b in range(hist_scale.GetNbinsX()):
-                self.alt_scales[xsec][b] = hist_scale.GetBinContent(b+1)
+        #for xsec in [60000,61000,62000,63000,64000,65000,66000,67000,68000,69000,70000,71000,72000,73000,74000,75000,76000,77000,78000,79000,80000]:
+        #    self.alt_scales[xsec] = {}
+        #    hist_scale = rootfile.Get('pileup_scale_{0}'.format(xsec))
+        #    for b in range(hist_scale.GetNbinsX()):
+        #        self.alt_scales[xsec][b] = hist_scale.GetBinContent(b+1)
         rootfile.Close()
 
     def alt_weight(self,event,xsec):
