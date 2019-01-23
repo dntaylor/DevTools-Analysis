@@ -226,7 +226,10 @@ class LeptonScales(object):
 
     def __getTauScale(self,leptonId,cand):
         # id scale
-        return 0.95, 0.05 # simple recommendation, 5% error
+        if cand.pt()<20:
+            return 0.83, 0.06 # private medium id
+        else:
+            return 0.97, 0.05 # simple recommendation, 5% error, medium id
 
     def __getTauEnergyScale(self,cand):
         # energy scale

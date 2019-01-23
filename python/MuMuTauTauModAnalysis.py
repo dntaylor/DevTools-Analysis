@@ -16,7 +16,7 @@ import operator
 
 import ROOT
 
-logger = logging.getLogger("MuMuTauTauAnalysis")
+logger = logging.getLogger("MuMuTauTauModAnalysis")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr,format='%(asctime)s.%(msecs)03d %(levelname)s %(name)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def load_events(h,a):
@@ -29,15 +29,15 @@ def load_events(h,a):
 
 doPacked = False
 
-class MuMuTauTauAnalysis(AnalysisBase):
+class MuMuTauTauModAnalysis(AnalysisBase):
     '''
-    MuMuTauTau analysis
+    MuMuTauTauMod analysis
     '''
 
     def __init__(self,**kwargs):
-        outputFileName = kwargs.pop('outputFileName','muMuTauTauTree.root')
-        outputTreeName = kwargs.pop('outputTreeName','MuMuTauTauTree')
-        super(MuMuTauTauAnalysis, self).__init__(outputFileName=outputFileName,outputTreeName=outputTreeName,**kwargs)
+        outputFileName = kwargs.pop('outputFileName','muMuTauTauModTree.root')
+        outputTreeName = kwargs.pop('outputTreeName','MuMuTauTauModTree')
+        super(MuMuTauTauModAnalysis, self).__init__(outputFileName=outputFileName,outputTreeName=outputTreeName,**kwargs)
 
         self._kinfit = None
 
@@ -107,16 +107,8 @@ class MuMuTauTauAnalysis(AnalysisBase):
         # h
         self.addGenParticle('gh')
         self.addComposite('h')
-        self.tree.add(lambda cands: self.kinfit(cands).getComposite('h').M(), 'h_massKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getFitStatus(), 'kinFitStatus', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).atLowerBound, 'kinFitAtLowerBound', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).atUpperBound, 'kinFitAtUpperBound', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).getFitX(), 'kinFitX', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getFitChi2(), 'kinFitChi2', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getRecoil().Px(), 'kinFitRecoilPx', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getRecoil().Py(), 'kinFitRecoilPy', 'F')
         self.addCompositeMet('hmet')
-        self.tree.add(lambda cands: cands['hmet'].Mcat(2,3), 'hmet_mcat', 'F')
+        #self.tree.add(lambda cands: cands['hmet'].Mcat(2,3), 'hmet_mcat', 'F')
 
         # amm leptons
         self.addCompositeGenParticle('gamm','gam1','gam2')
@@ -124,32 +116,16 @@ class MuMuTauTauAnalysis(AnalysisBase):
         if doPacked:
             self.addCandidate('ch1')
             self.addComposite('mmch')
-        self.tree.add(lambda cands: self.kinfit(cands).getComposite('amm').M(), 'amm_massKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getCompositeStatus('amm'), 'amm_kinFitStatus', 'I')
         self.addCompositeMet('ammmet')
         self.addLepton('am1')
         self.addGenDeltaR('am1','gam1')
         self.addGenParticle('gam1')
         self.addDetailedMuon('am1')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticleStatus('m1'),    'am1_kinFitStatus', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').Pt(),     'am1_ptKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').Eta(),    'am1_etaKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').Phi(),    'am1_phiKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').Energy(), 'am1_energyKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').M(),      'am1_massKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m1').getChi2(),'am1_kinFitChi2', 'F')
         self.addLeptonMet('am1met')
         self.addLepton('am2')
         self.addGenDeltaR('am2','gam2')
         self.addGenParticle('gam2')
         self.addDetailedMuon('am2')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticleStatus('m2'),    'am2_kinFitStatus', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').Pt(),     'am2_ptKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').Eta(),    'am2_etaKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').Phi(),    'am2_phiKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').Energy(), 'am2_energyKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').M(),      'am2_massKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('m2').getChi2(),'am2_kinFitChi2', 'F')
         self.addLeptonMet('am2met')
 
         # att leptons
@@ -158,31 +134,17 @@ class MuMuTauTauAnalysis(AnalysisBase):
         if doPacked:
             self.addCandidate('ch2')
             self.addComposite('ttch')
-        self.tree.add(lambda cands: self.kinfit(cands).getComposite('att').M(), 'att_massKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getCompositeStatus('att'), 'att_kinFitStatus', 'I')
         self.addCompositeMet('attmet')
-        self.tree.add(lambda cands: cands['attmet'].Mcat(0,1), 'attmet_mcat', 'F')
+        #self.tree.add(lambda cands: cands['attmet'].Mcat(0,1), 'attmet_mcat', 'F')
         self.addGenParticle('gat1',isTau=True)
         self.addLepton('atm')
         self.addGenDeltaR('atm','gatm')
         self.addDetailedMuon('atm')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticleStatus('tm'),    'atm_kinFitStatus', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('tm').Pt(),     'atm_ptKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('tm').Eta(),    'atm_etaKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('tm').Phi(),    'atm_phiKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('tm').Energy(), 'atm_energyKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('tm').M(),      'atm_massKinFit', 'F')
         self.addLeptonMet('atmmet')
         self.addGenParticle('gat2',isTau=True)
         self.addLepton('ath')
         self.addGenDeltaR('ath','gath')
         self.addDetailedTau('ath')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticleStatus('th'), 'ath_kinFitStatus', 'I')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('th').Pt(),     'ath_ptKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('th').Eta(),    'ath_etaKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('th').Phi(),    'ath_phiKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('th').Energy(), 'ath_energyKinFit', 'F')
-        self.tree.add(lambda cands: self.kinfit(cands).getParticle('th').M(),      'ath_massKinFit', 'F')
         self.addLeptonMet('athmet')
         self.addJet('athjet')
 
@@ -199,7 +161,7 @@ class MuMuTauTauAnalysis(AnalysisBase):
         '''Add detailed  variables'''
         self.addCandVar(label,'matches_IsoMu24','matches_IsoMu24','I')
         self.addCandVar(label,'matches_IsoTkMu24','matches_IsoTkMu24','I')
-        super(MuMuTauTauAnalysis,self).addDetailedMuon(label)
+        super(MuMuTauTauModAnalysis,self).addDetailedMuon(label)
 
     def addGenParticle(self,label,isTau=False):
         self.tree.add(lambda cands: cands[label].pt()     if label in cands else 0, '{0}_pt'.format(label),     'F')
@@ -234,77 +196,6 @@ class MuMuTauTauAnalysis(AnalysisBase):
         if not cand.decayModeFinding(): return False
         return True
 
-    def kinfit(self,cands):
-        # return fitted constraints
-        if self._kinfit: return self._kinfit
-
-        # create constraints
-        m1 = cands['am1']
-        m2 = cands['am2']
-        tm = cands['atm']
-        th = cands['ath']
-        m1p4 = KinematicFitter.Muon(       'm1', m1.pt(), m1.eta(), m1.phi(), m1.energy())
-        m2p4 = KinematicFitter.Muon(       'm2', m2.pt(), m2.eta(), m2.phi(), m2.energy())
-        tmp4 = KinematicFitter.MuonTau(    'tm', tm.pt(), tm.eta(), tm.phi(), tm.energy())
-        thp4 = KinematicFitter.HadronicTau('th', th.pt(), th.eta(), th.phi(), th.energy(), th.decayMode())
-        # add cov of muons/taus with appropriate error on energy
-        #unc1 = 0.01 if abs(m1.eta())<0.9 else 0.02
-        #unc2 = 0.01 if abs(m2.eta())<0.9 else 0.02
-        #if m1.pt()>100: unc1 = 0.05
-        #if m2.pt()>100: unc2 = 0.05
-        #m1p4.setErrors(unc1*m1p4.E(),0,0)
-        #m2p4.setErrors(unc2*m2p4.E(),0,0)
-
-        met = cands['met']
-        metp4 = KinematicFitter.MET('met', met.et(), met.phi(), met.cov00(), met.cov01(), met.cov01(), met.cov11())
-
-        kinfit = KinematicFitter.KinematicFitter()
-        kinfit.addParticle('m1',m1p4)
-        kinfit.addParticle('m2',m2p4)
-        kinfit.addParticle('tm',tmp4)
-        kinfit.addParticle('th',thp4)
-        kinfit.addParticle('met',metp4)
-
-        unc = 0.01
-        amm = cands['amm']
-        if abs(amm.eta())>1.2: unc = 0.018
-        kinfit.addComposite('amm','m1','m2',uncertainty=unc*amm.M())
-        kinfit.addComposite('att','tm','th')
-        kinfit.addComposite('h','m1','m2','tm','th')
-
-        kinfit.addMassConstraint('amm','att',0)
-
-
-        if 'gh' in cands:
-            gh  = cands['gh']
-            gmm = cands['gamm']
-            gtt = cands['gatt']
-            gm1 = cands['gam1']
-            gm2 = cands['gam2']
-            gt1 = cands['gat1']
-            gt2 = cands['gat2']
-            gm1p4 = KinematicFitter.Muon(       'gm1', gm1.pt(), gm1.eta(), gm1.phi(), gm1.energy())
-            gm2p4 = KinematicFitter.Muon(       'gm2', gm2.pt(), gm2.eta(), gm2.phi(), gm2.energy())
-            gt1p4 = KinematicFitter.Tau(        'gt1', gt1.pt(), gt1.eta(), gt1.phi(), gt1.energy(), -1)
-            gt2p4 = KinematicFitter.Tau(        'gt2', gt2.pt(), gt2.eta(), gt2.phi(), gt2.energy(), -1)
-            gmmp4 = KinematicFitter.Particle(   'gmm', gmm.pt(), gmm.eta(), gmm.phi(), gmm.energy())
-            gttp4 = KinematicFitter.Particle(   'gtt', gtt.pt(), gtt.eta(), gtt.phi(), gtt.energy())
-            ghp4  = KinematicFitter.Particle(   'gh',  gh.pt(),  gh.eta(),  gh.phi(),  gh.energy())
-            kinfit.addGenParticle('gm1',gm1p4)
-            kinfit.addGenParticle('gm2',gm2p4)
-            kinfit.addGenParticle('gt1',gt1p4)
-            kinfit.addGenParticle('gt2',gt2p4)
-            kinfit.addGenParticle('gmm',gmmp4)
-            kinfit.addGenParticle('gtt',gttp4)
-            kinfit.addGenParticle('gh', ghp4)
-
-        # perform fit with constraints
-        kinfit.setMinimizationParticles('th')
-        kinfit.fit(useUncertainty=True)
-
-        self._kinfit = kinfit
-
-        return self._kinfit
 
     ############################
     ### select 4l candidates ###
@@ -346,10 +237,10 @@ class MuMuTauTauAnalysis(AnalysisBase):
         leps = muons+taus
         if len(muons)<3:
             self.report_failure('fails 3 muon requirement')
-            return candidate
+            return self.fallback()
         if len(taus)<1: 
             self.report_failure('fails 1 tau requirement')
-            return candidate
+            return self.fallback()
 
 
         # get the candidates
@@ -508,6 +399,121 @@ class MuMuTauTauAnalysis(AnalysisBase):
 
         return candidate
 
+    def fallback(self):
+        # reset kinfit
+        self._kinfit = None
+
+        candidate = {
+            'am1' : None,
+            'am1met' : None,
+            'am2' : None,
+            'am2met' : None,
+            'atm' : Candidate(None),
+            'atmmet' : Candidate(None),
+            'ath' : Candidate(None),
+            'athmet' : Candidate(None),
+            'amm' : None,
+            'ammmet' : None,
+            'att' : Candidate(None),
+            'attmet' : Candidate(None),
+            'mmm' : Candidate(None),
+            'mmmmet' : Candidate(None),
+            'mmt' : Candidate(None),
+            'mmtmet' : Candidate(None),
+            'h' : Candidate(None),
+            'hmet' : Candidate(None),
+            'mmm' : Candidate(None),
+            'mmmmet' :Candidate(None),
+            'met': self.pfmet,
+            'athjet': Candidate(None),
+            'cleanJets' : [],
+            'cleanJetsNoTau' : [],
+        }
+
+        # get leptons
+        muons = [m for m in self.muons if self.passMuon(m)]
+        leps = muons
+        if len(muons)<2:
+            self.report_failure('fails 2 muon requirement')
+            return candidate
+
+
+        # get the candidates
+        hCand = []
+        mmDeltaR = 999
+        ttDeltaR = 999
+        m1pt = 0
+        furthest = 0
+        nperms = 0
+        nvalid = 0
+        for quad in itertools.permutations(leps,2):
+            nperms += 1
+            # require mmmt
+            if not quad[0].__class__.__name__=='Muon': continue
+            if not quad[1].__class__.__name__=='Muon': continue
+            # trigger match
+            matchTrigger = quad[0].matches_IsoMu24() or quad[0].matches_IsoTkMu24()
+            if not matchTrigger: continue
+            furthest = max([1,furthest])
+            # charge OS
+            if quad[0].charge()==quad[1].charge(): continue
+            furthest = max([2,furthest])
+            nvalid += 1
+            # require lead m pt>25
+            if quad[0].pt()<25: continue
+            furthest = max([3,furthest])
+            # make composites
+            amm = DiCandidate(quad[0],quad[1])
+            furthest = max([4,furthest])
+            # choose best
+            if not hCand: hCand = quad
+            better = True
+            if amm.deltaR()>mmDeltaR:
+                better = False
+            elif amm.deltaR()==mmDeltaR and quad[0].pt()<m1pt:
+                better = False
+            if better:
+                hCand = quad
+                mmDeltaR = amm.deltaR()
+                m1pt = quad[0].pt()
+
+        #print 'number perms: {}, number valid: {}'.format(nperms,nvalid)
+
+        furthestMap = {
+            0: 'topology',
+            1: 'trigger',
+            2: 'OS',
+            3: 'lead pt',
+            4: 'deltaR',
+        }
+                
+        if not hCand:
+            self.report_failure('no higgs candidate, furthest {}'.format(furthestMap[furthest]))
+            return candidate
+
+        am1 = hCand[0] #if hCand[0].pt()>hCand[1].pt() else hCand[1]
+        am2 = hCand[1] #if hCand[0].pt()>hCand[1].pt() else hCand[0]
+
+        amm = DiCandidate(am1,am2)
+        if amm.M()>30:
+            self.report_failure('selected higgs amm M>30')
+            return candidate
+
+        candidate['am1'] = am1
+        candidate['am1met'] = MetCompositeCandidate(self.pfmet,am1)
+        candidate['am2'] = am2
+        candidate['am2met'] = MetCompositeCandidate(self.pfmet,am2)
+        candidate['amm'] = DiCandidate(am1,am2)
+        candidate['ammmet'] = MetCompositeCandidate(self.pfmet,am1,am2)
+
+        # clean the jets
+        candidate['cleanJets'] = self.cleanCands(self.jets,[am1,am2],0.4)
+        candidate['cleanJetsDR08'] = candidate['cleanJets']
+
+        candidate.update(self.getGenCandidates())
+
+        return candidate
+
     def getGenCandidates(self):
         if 'SUSY' not in self.fileNames[0]:
             return {}
@@ -655,9 +661,9 @@ class MuMuTauTauAnalysis(AnalysisBase):
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Run analyzer')
 
-    parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('SingleMuon' if doPacked else 'haa_125_15',version='80XMuMuTauTau{}'.format('Packed' if doPacked else '')), help='Input files')
+    parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('haa_125_10_new',version='80XMuMuTauTauTrigMC'), help='Input files')
     parser.add_argument('--inputFileList', type=str, default='', help='Input file list')
-    parser.add_argument('--outputFile', type=str, default='muMuTauTauTree.root', help='Output file')
+    parser.add_argument('--outputFile', type=str, default='muMuTauTauModTree.root', help='Output file')
     parser.add_argument('--shift', type=str, default='', choices=['','ElectronEnUp','ElectronEnDown','MuonEnUp','MuonEnDown','TauEnUp','TauEnDown','JetEnUp','JetEnDown','JetResUp','JetResDown','UnclusteredEnUp','UnclusteredEnDown'], help='Energy shift')
 
     return parser.parse_args(argv)
@@ -668,9 +674,9 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    muMuTauTauAnalysis = MuMuTauTauAnalysis(
+    muMuTauTauModAnalysis = MuMuTauTauModAnalysis(
         outputFileName=args.outputFile,
-        outputTreeName='MuMuTauTauTree',
+        outputTreeName='MuMuTauTauModTree',
         inputFileNames=args.inputFileList if args.inputFileList else args.inputFiles,
         inputTreeName='MiniTree',
         inputLumiName='LumiTree',
@@ -679,10 +685,10 @@ def main(argv=None):
     )
 
     try:
-       muMuTauTauAnalysis.analyze()
-       muMuTauTauAnalysis.finish()
+       muMuTauTauModAnalysis.analyze()
+       muMuTauTauModAnalysis.finish()
     except KeyboardInterrupt:
-       muMuTauTauAnalysis.finish()
+       muMuTauTauModAnalysis.finish()
 
     return 0
 

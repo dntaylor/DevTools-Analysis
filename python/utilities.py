@@ -30,6 +30,8 @@ latestNtuples = {
     '80XHpp'               : '2018-06-19_DevTools_80X_Hpp_v1',
     #'80XMuMuTauTau'        : '2018-01-31_DevTools_MuMuTauTauSkim_80X_v1', # Moriond 2017
     '80XMuMuTauTau'        : '2018-05-01_DevTools_MuMuTauTauSkim_80X_v1', # Moriond 2017 (add hadronFlavour)
+    '80XMuMuTauTauTrig'    : '2018-10-03_DevTools_MuMuTauTauSkim_triggerFilterOnly_slimmedTaus_80X_v1', 
+    '80XMuMuTauTauTrigMC'  : '2018-10-03_DevTools_MuMuTauTauSkim_triggerFilterOnly_slimmedTausMuonCleaned_80X_v1', 
     '80XMuMu'              : '2018-05-09_DevTools_80X_v1', # Moriond 2017
     #'80XMuMuTauTauUnclean' : '2018-03-09_DevTools_MuMuTauTauSkim_80X_uncleaned_v1', # Moriond 2017
     '80XMuMuTauTauZSkim'   : '2018-10-03_DevTools_MuMuTauTauZSkim_80X_v1', # Moriond 2017 (add hadronFlavour)
@@ -70,12 +72,15 @@ def getTestFiles(sample,n=1,version=None):
     }
 
     for h in [125,300,750]:
-        for a in ['3p6',4,5,6,7,9,11,13,15,17,19,21]:
+        for a in ['3p6',4,5,6,7,8,9,10,11,12,13,14,15,17,19,21]:
             if h == 125:
                 name = 'SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-{a}_TuneCUETP8M1_13TeV_madgraph_pythia8'
+                nameNew = 'SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-{h}_M-{a}_TuneCUETP8M1_13TeV_madgraph_pythia8'
             else:
                 name = 'SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-{h}_M-{a}_TuneCUETP8M1_13TeV_madgraph_pythia8'
+                nameNew = 'SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-{h}_M-{a}_TuneCUETP8M1_13TeV_madgraph_pythia8'
             sampleMap['haa_{h}_{a}'.format(h=h,a=a)] = name.format(h=h,a=a)
+            sampleMap['haa_{h}_{a}_new'.format(h=h,a=a)] = nameNew.format(h=h,a=a)
 
     if sample not in sampleMap: return []
     
