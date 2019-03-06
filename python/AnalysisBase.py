@@ -583,7 +583,6 @@ class AnalysisBase(object):
         self.tree.add(lambda cands: self.event.Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90Pass(), 'pass_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90', 'I')
         self.tree.add(lambda cands: self.event.Photon175Pass(), 'pass_Photon175', 'I')
         
-
     def addCandVar(self,label,varLabel,var,rootType,permissive=False):
         '''Add a variable for a cand'''
         if permissive:

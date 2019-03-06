@@ -35,6 +35,7 @@ latestNtuples = {
     '80XMuMu'              : '2018-05-09_DevTools_80X_v1', # Moriond 2017
     #'80XMuMuTauTauUnclean' : '2018-03-09_DevTools_MuMuTauTauSkim_80X_uncleaned_v1', # Moriond 2017
     '80XMuMuTauTauZSkim'   : '2018-10-03_DevTools_MuMuTauTauZSkim_80X_v1', # Moriond 2017 (add hadronFlavour)
+    '80XMuMuTauTauZSkimAlt': '2019-01-02_DevTools_MuMuTauTauZSkim_slimmedTaus_80X_v1', # using slimmed taus
     '94X'                : '2018-03-15_DevTools_94X_v3', # Moriond 2018
 }
 

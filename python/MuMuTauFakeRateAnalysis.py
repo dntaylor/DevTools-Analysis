@@ -63,6 +63,7 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
         self.addDiLepton('mt')
         self.addLepton('t')
         self.addDetailedTau('t')
+        self.tree.add(lambda cands: self.tauGenMatch(cands,'t'), 't_tauGenMatch2', 'F')
         self.addJet('tjet')
         self.addLepton('m')
         self.addDetailedMuon('m')
@@ -120,7 +121,7 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
             # charge OS
             if m1.charge()==m2.charge(): continue
             # require lead m pt>25
-            if m1.pt()<20: continue
+            if m1.pt()<26: continue
             if m2.pt()<10: continue
             # iso
             if m1.relPFIsoDeltaBetaR04()>=0.25: continue
@@ -140,6 +141,10 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
         m1 = zCand[0] if zCand[0].pt()>zCand[1].pt() else zCand[1]
         m2 = zCand[1] if zCand[0].pt()>zCand[1].pt() else zCand[0]
 
+        z = DiCandidate(m1,m2)
+        if z.M()>120: return candidate
+        if z.M()<60: return candidate
+
         # highest pt tau with DR>0.8 from selected muons
         goodTaus = [t for t in taus if deltaR(t.eta(),t.phi(),m1.eta(),m1.phi())>0.8 and deltaR(t.eta(),t.phi(),m2.eta(),m2.phi())>0.8]
         if len(goodTaus)==0: return candidate
@@ -151,16 +156,14 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
         otherMuonsByDR = sorted(otherMuons, key=lambda m: deltaR(m.eta(),m.phi(),t.eta(),t.phi()))
         nearM = otherMuonsByDR[0] if otherMuonsByDR else Candidate(None)
 
-        z = DiCandidate(m1,m2)
-        if z.M()>120: return candidate
-        if z.M()<60: return candidate
-
         candidate['z1'] = m1
         candidate['z2'] = m2
         candidate['t'] = t
         candidate['z'] = DiCandidate(m1,m2)
         candidate['m'] = nearM
         candidate['mt'] = DiCandidate(nearM,t) if len(otherMuonsByDR) else DiCandidate(Candidate(None),Candidate(None))
+
+        result = self.tauGenMatch(candidate,'t')
 
         # match jet to tau
         dr = 999
@@ -175,24 +178,91 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
 
         return candidate
 
+    def tauGenMatch(self,candidate,label):
+        if self.event.isData(): return -1
+        t = candidate[label]
+        gtaus = [g for g in self.gen if abs(g.pdgId())==15]
+        gelectrons = [g for g in self.gen if abs(g.pdgId())==11]
+        gmuons = [g for g in self.gen if abs(g.pdgId())==13]
+        bestG = None
+        bestDR = 999.
+        for g in self.gen:
+            if not g.isPrompt(): continue
+            if g.pt()<8: continue
+            dr = deltaR(t.eta(),t.phi(),g.eta(),g.phi())
+            if dr<bestDR:
+                bestG = g
+                bestDR = dr
+        bestTauG = None
+        bestTauDR = 999
+        for g in gtaus:
+            dr = deltaR(t.eta(),t.phi(),g.eta(),g.phi())
+            if dr<bestTauDR:
+                bestTauG = g
+                bestTauDR = dr
+        #if bestDR<0.2:
+        #    dr = deltaR(t.eta(),t.phi(),bestG.eta(),bestG.phi())
+        #    print bestG.pdgId(), bestG.numberOfDaughters(), bestG.daughter_1(), bestG.daughter_2(), bestG.mother_1(), dr
+        #else:
+        #    print 'No prompt'
+        #if bestTauDR<0.2:
+        #    dr = deltaR(t.eta(),t.phi(),bestTauG.eta(),bestTauG.phi())
+        #    print bestTauG.pdgId(), bestTauG.numberOfDaughters(), bestTauG.daughter_1(), bestTauG.daughter_2(), bestTauG.mother_1(), dr
+        #else:
+        #    print 'No gen tau'
+        if bestDR<0.2 and bestDR<bestTauDR:
+            if abs(bestG.pdgId()) == 11: return 1
+            elif abs(bestG.pdgId()) == 13: return 2
+        elif bestTauDR<0.2 and bestTauDR<bestDR:
+            if abs(bestTauG.pdgId()) == 15  and 11 in [abs(bestTauG.daughter_1()), abs(bestTauG.daughter_2())]: return 3
+            elif abs(bestTauG.pdgId()) == 15  and 13 in [abs(bestTauG.daughter_1()), abs(bestTauG.daughter_2())]: return 4
+            elif abs(bestTauG.pdgId()) == 15: return 5
+
+        return 6
+
+
 
     ###########################
     ### analysis selections ###
     ###########################
     def trigger(self,cands):
+        #isData = self.event.isData()>0.5
+        #if self.version=='76X':
+        #    triggerNames = {
+        #        'DoubleMuon'     : [
+        #            'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
+        #            'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+        #        ],
+        #    }
+        #else:
+        #    triggerNames = {
+        #        'DoubleMuon'     : [
+        #            'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
+        #            'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+        #        ],
+        #    }
+        ## the order here defines the heirarchy
+        ## first dataset, any trigger passes
+        ## second dataset, if a trigger in the first dataset is found, reject event
+        ## so forth
+        #datasets = [
+        #    'DoubleMuon',
+        #]
+        #return self.checkTrigger(*datasets,**triggerNames)
+
         isData = self.event.isData()>0.5
         if self.version=='76X':
             triggerNames = {
-                'DoubleMuon'     : [
-                    'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
-                    'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+                'SingleMuon'     : [
+                    'IsoMu20',
+                    'IsoTkMu20',
                 ],
             }
         else:
             triggerNames = {
-                'DoubleMuon'     : [
-                    'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
-                    'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+                'SingleMuon'     : [
+                    'IsoMu24',
+                    'IsoTkMu24',
                 ],
             }
         # the order here defines the heirarchy
@@ -200,9 +270,10 @@ class MuMuTauFakeRateAnalysis(AnalysisBase):
         # second dataset, if a trigger in the first dataset is found, reject event
         # so forth
         datasets = [
-            'DoubleMuon',
+            'SingleMuon',
         ]
-        return self.checkTrigger(*datasets,**triggerNames)
+        result = self.checkTrigger(*datasets,**triggerNames)
+        return result
 
     def triggerEfficiencyMC(self,cands):
         return self.triggerEfficiency(cands,mode='mc')
