@@ -148,17 +148,38 @@ class Tau(Candidate):
         super(Tau, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
 
+    def _p4(self):
+        pt = self.get('pt')
+        eta = self.get('eta')
+        phi = self.get('phi')
+        m = self.get('mass')
+        p4 = ROOT.TLorentzVector()
+        p4.SetPtEtaPhiM(pt,eta,phi,m)
+        # energy correction (2016 ReReco)
+        dm = self.get('decayMode')
+        if dm==0:
+            p4 *= 1-0.005
+        elif dm==1:
+            p4 *= 1+0.011
+        elif dm==0:
+            p4 *= 1+0.006
+        # uncertainty
+        if pt<400:
+            if self.shift=='MuonEnUp': p4 *= 1+0.012
+            if self.shift=='MuonEnDown': p4 *= 1-0.012
+        else:
+            if self.shift=='MuonEnUp': p4 *= 1+0.03
+            if self.shift=='MuonEnDown': p4 *= 1-0.03
+        return p4
+
     def pt(self):
-        var = 'pt'
-        if self.shift=='TauEnUp': var = 'pt_tauEnUp'
-        if self.shift=='TauEnDown': var = 'pt_tauEnDown'
-        return self.get(var)
+        p4 = self._p4()
+        return p4.Pt()
 
     def energy(self):
-        var = 'energy'
-        if self.shift=='TauEnUp': var = 'energy_tauEnUp'
-        if self.shift=='TauEnDown': var = 'energy_tauEnDown'
-        return self.get(var)
+        p4 = self._p4()
+        return p4.Energy()
+
 
 ###########
 ### Jet ###
