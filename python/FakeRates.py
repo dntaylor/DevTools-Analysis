@@ -16,12 +16,12 @@ class FakeRates(object):
         self.fakehists_mc = {'electrons':{},'muons':{},'taus':{}}
         self.fakekey = '{num}_{denom}'
         # WZ fakerates
-        fake_path = '{0}/src/DevTools/Analyzer/data/fakerates_dijet_13TeV_Run2015D.root'.format(os.environ['CMSSW_BASE'])
-        self.fake_rootfile = ROOT.TFile(fake_path)
-        self.fakehists['electrons'][self.fakekey.format(num='WZMedium',denom='WZLoose')] = self.fake_rootfile.Get('e/medium/fakeratePtEta')
-        self.fakehists['electrons'][self.fakekey.format(num='WZTight',denom='WZLoose')] = self.fake_rootfile.Get('e/tight/fakeratePtEta')
-        self.fakehists['muons'][self.fakekey.format(num='WZMedium',denom='WZLoose')] = self.fake_rootfile.Get('m/medium/fakeratePtEta')
-        self.fakehists['muons'][self.fakekey.format(num='WZTight',denom='WZLoose')] = self.fake_rootfile.Get('m/tight/fakeratePtEta')
+        #fake_path = '{0}/src/DevTools/Analyzer/data/fakerates_dijet_13TeV_Run2015D.root'.format(os.environ['CMSSW_BASE'])
+        #self.fake_rootfile = ROOT.TFile(fake_path)
+        #self.fakehists['electrons'][self.fakekey.format(num='WZMedium',denom='WZLoose')] = self.fake_rootfile.Get('e/medium/fakeratePtEta')
+        #self.fakehists['electrons'][self.fakekey.format(num='WZTight',denom='WZLoose')] = self.fake_rootfile.Get('e/tight/fakeratePtEta')
+        #self.fakehists['muons'][self.fakekey.format(num='WZMedium',denom='WZLoose')] = self.fake_rootfile.Get('m/medium/fakeratePtEta')
+        #self.fakehists['muons'][self.fakekey.format(num='WZTight',denom='WZLoose')] = self.fake_rootfile.Get('m/tight/fakeratePtEta')
         # H++ fakerates
         fake_path = '{0}/src/DevTools/Analyzer/data/fakerates_dijet_hpp_13TeV_Run2015D.root'.format(os.environ['CMSSW_BASE'])
         if self.version=='80X':
@@ -94,7 +94,7 @@ class FakeRates(object):
         self.__finish()
 
     def __finish(self):
-        self.fake_rootfile.Close()
+        #self.fake_rootfile.Close()
         self.fake_hpp_rootfile.Close()
         self.fake_tau_rootfile.Close()
         self.fake_mmtt_tau_rootfile.Close()

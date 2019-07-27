@@ -28,17 +28,17 @@ class TriggerScales(object):
         ####################
         # single muon
         # https://twiki.cern.ch/twiki/bin/view/CMS/MuonReferenceEffsRun2
-        singleMu_path = '{0}/src/DevTools/Analyzer/data/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root'.format(os.environ['CMSSW_BASE'])
-        self.singleMu_rootfile = ROOT.TFile(singleMu_path)
-        self.singleMu_efficiencies = {}
-        for name in ['runC_IsoMu20_OR_IsoTkMu20', 'runC_Mu45_eta2p1', 'runC_Mu50',
-                     'runD_IsoMu20_OR_IsoTkMu20_HLTv4p2', 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3',
-                     'runD_Mu45_eta2p1', 'runD_Mu50']:
-                directory = '{0}_PtEtaBins'.format(name)
-                self.singleMu_efficiencies[name] = {
-                    'MC'   : self.singleMu_rootfile.Get('{0}/efficienciesMC/pt_abseta_MC'.format(directory)),
-                    'DATA' : self.singleMu_rootfile.Get('{0}/efficienciesDATA/pt_abseta_DATA'.format(directory)),
-                }
+        #singleMu_path = '{0}/src/DevTools/Analyzer/data/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root'.format(os.environ['CMSSW_BASE'])
+        #self.singleMu_rootfile = ROOT.TFile(singleMu_path)
+        #self.singleMu_efficiencies = {}
+        #for name in ['runC_IsoMu20_OR_IsoTkMu20', 'runC_Mu45_eta2p1', 'runC_Mu50',
+        #             'runD_IsoMu20_OR_IsoTkMu20_HLTv4p2', 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3',
+        #             'runD_Mu45_eta2p1', 'runD_Mu50']:
+        #        directory = '{0}_PtEtaBins'.format(name)
+        #        self.singleMu_efficiencies[name] = {
+        #            'MC'   : self.singleMu_rootfile.Get('{0}/efficienciesMC/pt_abseta_MC'.format(directory)),
+        #            'DATA' : self.singleMu_rootfile.Get('{0}/efficienciesDATA/pt_abseta_DATA'.format(directory)),
+        #        }
 
         # double tau fits
         self.doubleTau_efficiencies = {
@@ -59,18 +59,18 @@ class TriggerScales(object):
         ##############
         # HWW measurements: single mu, single e, double mu per leg, double e per leg
         # https://twiki.cern.ch/twiki/bin/view/CMS/HWW2015TriggerResults
-        singleMu_path     = '{0}/src/DevTools/Analyzer/data/HWW_HLT_IsoMu20orIsoTkMu20_76X.txt'.format(os.environ['CMSSW_BASE'])
-        doubleMuLeg1_path = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Mu17_Mu8Leg1_76X.txt'.format(os.environ['CMSSW_BASE'])
-        doubleMuLeg2_path = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Mu17_Mu8Leg2_76X.txt'.format(os.environ['CMSSW_BASE'])
-        singleE_path      = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele23_WPLoose_76X.txt'.format(os.environ['CMSSW_BASE'])
-        doubleELeg1_path  = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele17_Ele12Leg1_76X.txt'.format(os.environ['CMSSW_BASE'])
-        doubleELeg2_path  = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele17_Ele12Leg2_76X.txt'.format(os.environ['CMSSW_BASE'])
-        self.hww_singleMu_efficiencies     = self.__parse_hww(singleMu_path,'muons')
-        self.hww_doubleMuLeg1_efficiencies = self.__parse_hww(doubleMuLeg1_path,'muons')
-        self.hww_doubleMuLeg2_efficiencies = self.__parse_hww(doubleMuLeg2_path,'muons')
-        self.hww_singleE_efficiencies      = self.__parse_hww(singleE_path,'electrons')
-        self.hww_doubleELeg1_efficiencies  = self.__parse_hww(doubleELeg1_path,'electrons')
-        self.hww_doubleELeg2_efficiencies  = self.__parse_hww(doubleELeg2_path,'electrons')
+        #singleMu_path     = '{0}/src/DevTools/Analyzer/data/HWW_HLT_IsoMu20orIsoTkMu20_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #doubleMuLeg1_path = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Mu17_Mu8Leg1_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #doubleMuLeg2_path = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Mu17_Mu8Leg2_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #singleE_path      = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele23_WPLoose_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #doubleELeg1_path  = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele17_Ele12Leg1_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #doubleELeg2_path  = '{0}/src/DevTools/Analyzer/data/HWW_HLT_Ele17_Ele12Leg2_76X.txt'.format(os.environ['CMSSW_BASE'])
+        #self.hww_singleMu_efficiencies     = self.__parse_hww(singleMu_path,'muons')
+        #self.hww_doubleMuLeg1_efficiencies = self.__parse_hww(doubleMuLeg1_path,'muons')
+        #self.hww_doubleMuLeg2_efficiencies = self.__parse_hww(doubleMuLeg2_path,'muons')
+        #self.hww_singleE_efficiencies      = self.__parse_hww(singleE_path,'electrons')
+        #self.hww_doubleELeg1_efficiencies  = self.__parse_hww(doubleELeg1_path,'electrons')
+        #self.hww_doubleELeg2_efficiencies  = self.__parse_hww(doubleELeg2_path,'electrons')
         
         # define supported triggers
         self.singleTriggers = {
@@ -128,18 +128,18 @@ class TriggerScales(object):
             'norm' : fitresults['data_genuine_VLooseIso_dm0']['norm'],
         }
 
-        path_data = '{0}/src/DevTools/Analyzer/data/tauleg_of_di_tau_real_taus_skim_v2.root'.format(os.environ['CMSSW_BASE'])
-        path_mc   = '{0}/src/DevTools/Analyzer/data/tauleg_of_di_tau_real_taus_skim_mc_v2.root'.format(os.environ['CMSSW_BASE'])
-        self.doubleTau_rootfile_80X_data = ROOT.TFile(path_data)
-        self.doubleTau_rootfile_80X_mc   = ROOT.TFile(path_mc)
-        self.doubleTau_efficiencies_80X = {'DATA':{}, 'MC':{}}
-        for iso in ['NoIso','VLooseIso','LooseIso','MediumIso','TightIso','VTightIso','VVTightIso']:
-            den_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt_den'.format(iso)
-            num_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt_num'.format(iso)
-            graph_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt'.format(iso)
-            centers, widths = self.__parseBinning(self.doubleTau_rootfile_80X_data.Get(den_path))
-            self.doubleTau_efficiencies_80X['DATA'][iso] = self.__parseErrors(self.doubleTau_rootfile_80X_data.Get(graph_path),xbinCenters=centers,xbinWidths=widths)
-            self.doubleTau_efficiencies_80X['MC'][iso]   = self.__parseErrors(self.doubleTau_rootfile_80X_mc.Get(graph_path),  xbinCenters=centers,xbinWidths=widths)
+        #path_data = '{0}/src/DevTools/Analyzer/data/tauleg_of_di_tau_real_taus_skim_v2.root'.format(os.environ['CMSSW_BASE'])
+        #path_mc   = '{0}/src/DevTools/Analyzer/data/tauleg_of_di_tau_real_taus_skim_mc_v2.root'.format(os.environ['CMSSW_BASE'])
+        #self.doubleTau_rootfile_80X_data = ROOT.TFile(path_data)
+        #self.doubleTau_rootfile_80X_mc   = ROOT.TFile(path_mc)
+        #self.doubleTau_efficiencies_80X = {'DATA':{}, 'MC':{}}
+        #for iso in ['NoIso','VLooseIso','LooseIso','MediumIso','TightIso','VTightIso','VVTightIso']:
+        #    den_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt_den'.format(iso)
+        #    num_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt_num'.format(iso)
+        #    graph_path = 'os_{}_HLT_MediumIso35_L1iso30/tau_pt'.format(iso)
+        #    centers, widths = self.__parseBinning(self.doubleTau_rootfile_80X_data.Get(den_path))
+        #    self.doubleTau_efficiencies_80X['DATA'][iso] = self.__parseErrors(self.doubleTau_rootfile_80X_data.Get(graph_path),xbinCenters=centers,xbinWidths=widths)
+        #    self.doubleTau_efficiencies_80X['MC'][iso]   = self.__parseErrors(self.doubleTau_rootfile_80X_mc.Get(graph_path),  xbinCenters=centers,xbinWidths=widths)
 
         # private electron
         self.private_electron_80X = {}
@@ -300,13 +300,13 @@ class TriggerScales(object):
         self.__finish()
 
     def __finish(self):
-        self.singleMu_rootfile.Close()
+        #self.singleMu_rootfile.Close()
         self.singleMu_rootfile_80X_BCDEF.Close()
         self.singleMu_rootfile_80X_GH.Close()
         self.private_electron_80X_rootfile.Close()
         self.private_muon_80X_rootfile.Close()
-        self.doubleTau_rootfile_80X_data.Close()
-        self.doubleTau_rootfile_80X_mc.Close()
+        #self.doubleTau_rootfile_80X_data.Close()
+        #self.doubleTau_rootfile_80X_mc.Close()
 
     def __triggerWarning(self,triggers):
         logging.warning('Unmatched triggers: {0}'.format(' '.join(triggers)))

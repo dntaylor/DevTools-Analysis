@@ -64,6 +64,8 @@ class MuMuAnalysis(AnalysisBase):
         self.addDetailedMuon('m2')
         self.addLeptonMet('m2met')
 
+        self.addJet('leadJet')
+
         # met
         self.addMet('met')
 
@@ -100,6 +102,7 @@ class MuMuAnalysis(AnalysisBase):
             'mm' : None,
             'mmmet' : None,
             'met': self.pfmet,
+            'leadJet': Candidate(None),
         }
 
         # get leptons
@@ -151,6 +154,9 @@ class MuMuAnalysis(AnalysisBase):
         candidate['m2met'] = MetCompositeCandidate(self.pfmet,m2)
         candidate['mm'] = DiCandidate(m1,m2)
         candidate['mmmet'] = MetCompositeCandidate(self.pfmet,m1,m2)
+
+        cleanjets = self.cleanCands(self.jets,[m1,m2],0.4)
+        if len(cleanjets)>0: candidate['leadJet'] = cleanjets[0]
 
         return candidate
 

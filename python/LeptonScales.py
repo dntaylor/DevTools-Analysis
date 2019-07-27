@@ -62,15 +62,15 @@ class LeptonScales(object):
         
 
         # HZZ
-        self.muon_hzz_scales = {}
-        idpath = '{0}/src/DevTools/Analyzer/data/HZZ_muon_76X.root'.format(os.environ['CMSSW_BASE'])
-        self.muon_hzz_rootfile = ROOT.TFile(idpath)
-        self.muon_hzz_scales['HZZTight'] = self.muon_hzz_rootfile.Get('FINAL')
+        #self.muon_hzz_scales = {}
+        #idpath = '{0}/src/DevTools/Analyzer/data/HZZ_muon_76X.root'.format(os.environ['CMSSW_BASE'])
+        #self.muon_hzz_rootfile = ROOT.TFile(idpath)
+        #self.muon_hzz_scales['HZZTight'] = self.muon_hzz_rootfile.Get('FINAL')
 
-        self.electron_hzz_scales = {}
-        idpath = '{0}/src/DevTools/Analyzer/data/HZZ_electron_76X.root'.format(os.environ['CMSSW_BASE'])
-        self.electron_hzz_rootfile = ROOT.TFile(idpath)
-        self.electron_hzz_scales['HZZTight'] = self.electron_hzz_rootfile.Get('hScaleFactors_IdIsoSip')
+        #self.electron_hzz_scales = {}
+        #idpath = '{0}/src/DevTools/Analyzer/data/HZZ_electron_76X.root'.format(os.environ['CMSSW_BASE'])
+        #self.electron_hzz_rootfile = ROOT.TFile(idpath)
+        #self.electron_hzz_scales['HZZTight'] = self.electron_hzz_rootfile.Get('hScaleFactors_IdIsoSip')
 
         # private 80X
         
@@ -114,8 +114,8 @@ class LeptonScales(object):
             rootfile.Close()
         self.muon_pog_id_rootfile.Close()
         self.muon_pog_iso_rootfile.Close()
-        self.muon_hzz_rootfile.Close()
-        self.electron_hzz_rootfile.Close()
+        #self.muon_hzz_rootfile.Close()
+        #self.electron_hzz_rootfile.Close()
         self.private_electron_80X_rootfile.Close()
         self.private_muon_80X_rootfile.Close()
         self.private_muon_80X_rootfile_kyle.Close()

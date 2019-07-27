@@ -5,6 +5,7 @@ import os
 import sys
 import math
 import time
+import random
 
 sys.argv.append('-b')
 import ROOT
@@ -297,7 +298,22 @@ class AnalysisBase(object):
         if self.event.isData(): self.shift = ''
         if not self.event.isData(): self.gen = [GenParticle(tree,entry=i) for i in range(tree.genParticles_count)]
         self.electrons = [Electron(tree,entry=i,shift=self.shift) for i in range(tree.electrons_count)]
-        self.muons     = [Muon(tree,entry=i,shift=self.shift) for i in range(tree.muons_count)]
+        # get envelope of energy shifts
+        # generate 100 shifts, each muon gets gaussian shift, sum shifts, take up or down 1 sigma
+        if self.shift=='MuonEnUp' or self.shift=='MuonEnDown':
+            nshifts = 100
+            shiftSigmas = []
+            for i in xrange(nshifts):
+                shiftSigma = []
+                for m in xrange(tree.muons_count):
+                    shiftSigma += [random.gauss(0,1)]
+                shiftSigmas += [shiftSigma]
+            shiftSigmas = sorted(shiftSigmas, key=sum)
+            if self.shift=='MuonEnUp':   self.muons = [Muon(tree,entry=i,shift=self.shift,shiftSigma=shiftSigmas[int(nshifts/2+68/2*nshifts/100-1)][i]) for i in range(tree.muons_count)]
+            if self.shift=='MuonEnDown': self.muons = [Muon(tree,entry=i,shift=self.shift,shiftSigma=shiftSigmas[int(nshifts/2-68/2*nshifts/100-1)][i]) for i in range(tree.muons_count)]
+        else:
+            self.muons     = [Muon(tree,entry=i,shift=self.shift) for i in range(tree.muons_count)]
+        
         self.taus      = [Tau(tree,entry=i,shift=self.shift) for i in range(tree.taus_count)]
         if hasattr(tree, 'photons_count'): self.photons   = [Photon(tree,entry=i,shift=self.shift) for i in range(tree.photons_count)]
         self.jets      = [Jet(tree,entry=i,shift=self.shift) for i in range(tree.jets_count)]

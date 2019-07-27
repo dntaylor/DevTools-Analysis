@@ -75,9 +75,10 @@ class Muon(Candidate):
     '''
     Muon object access.
     '''
-    def __init__(self,tree,entry=-1,collName='muons',shift=None):
+    def __init__(self,tree,entry=-1,collName='muons',shift=None,shiftSigma=0.):
         super(Muon, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
     def _p4(self):
         pt = self.get('rochesterPt')
@@ -86,12 +87,18 @@ class Muon(Candidate):
         m = self.get('mass')
         p4 = ROOT.TLorentzVector()
         p4.SetPtEtaPhiM(pt,eta,phi,m)
-        if pt<100:
-            if self.shift=='MuonEnUp': p4 *= 1+0.002
-            if self.shift=='MuonEnDown': p4 *= 1-0.002
+        if self.shiftSigma:
+            if pt<100:
+                if self.shift=='MuonEnUp' or self.shift=='MuonEnDown': p4 *= 1 + 0.002*self.shiftSigma
+            else:
+                if self.shift=='MuonEnUp' or self.shift=='MuonEnDown': p4 *= 1 + 0.05*self.shiftSigma
         else:
-            if self.shift=='MuonEnUp': p4 *= 1+0.05
-            if self.shift=='MuonEnDown': p4 *= 1-0.05
+            if pt<100:
+                if self.shift=='MuonEnUp': p4 *= 1+0.002
+                if self.shift=='MuonEnDown': p4 *= 1-0.002
+            else:
+                if self.shift=='MuonEnUp': p4 *= 1+0.05
+                if self.shift=='MuonEnDown': p4 *= 1-0.05
         return p4
 
     def pt(self):
@@ -121,9 +128,10 @@ class Electron(Candidate):
     '''
     Electron object access.
     '''
-    def __init__(self,tree,entry=-1,collName='electrons',shift=None):
+    def __init__(self,tree,entry=-1,collName='electrons',shift=None,shiftSigma=0.):
         super(Electron, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma =shiftSigma
 
     def pt(self):
         var = 'pt'
@@ -144,9 +152,10 @@ class Tau(Candidate):
     '''
     Tau object access.
     '''
-    def __init__(self,tree,entry=-1,collName='taus',shift=None):
+    def __init__(self,tree,entry=-1,collName='taus',shift=None,shiftSigma=0.):
         super(Tau, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
     def _p4(self):
         pt = self.get('pt')
@@ -188,9 +197,10 @@ class Jet(Candidate):
     '''
     Jet object access.
     '''
-    def __init__(self,tree,entry=-1,collName='jets',shift=None):
+    def __init__(self,tree,entry=-1,collName='jets',shift=None,shiftSigma=0.):
         super(Jet, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
     def pt(self):
         var = 'pt'
@@ -211,9 +221,10 @@ class Photon(Candidate):
     '''
     Photon object access.
     '''
-    def __init__(self,tree,entry=-1,collName='photons',shift=None):
+    def __init__(self,tree,entry=-1,collName='photons',shift=None,shiftSigma=0.):
         super(Photon, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
 ###################
 ### GenParticle ###
@@ -222,9 +233,10 @@ class GenParticle(Candidate):
     '''
     Gen particle object access.
     '''
-    def __init__(self,tree,entry=-1,collName='genParticles',shift=None):
+    def __init__(self,tree,entry=-1,collName='genParticles',shift=None,shiftSigma=0.):
         super(GenParticle, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
 ###########
 ### MET ###
@@ -233,9 +245,10 @@ class Met(Candidate):
     '''
     Met object access.
     '''
-    def __init__(self,tree,entry=0,collName='pfmet',shift=None):
+    def __init__(self,tree,entry=0,collName='pfmet',shift=None,shiftSigma=0.):
         super(Met, self).__init__(tree,entry=entry,collName=collName)
         self.shift = shift
+        self.shiftSigma = shiftSigma
 
     def __repr__(self):
         return '<{0} {1} {2:.2f}:{3:.2f}>'.format(

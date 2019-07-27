@@ -229,7 +229,7 @@ class MuMuTauTauAnalysis(AnalysisBase):
 
     def passTau(self,cand):
         if cand.pt()<10: return False
-        if abs(cand.dxy())>=0.2: return False
+        #if abs(cand.dxy())>=0.2: return False
         if abs(cand.dz())>=0.5: return False
         if not cand.decayModeFinding(): return False
         return True
