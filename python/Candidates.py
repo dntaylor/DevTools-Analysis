@@ -174,11 +174,11 @@ class Tau(Candidate):
             p4 *= 1+0.006
         # uncertainty
         if pt<400:
-            if self.shift=='MuonEnUp': p4 *= 1+0.012
-            if self.shift=='MuonEnDown': p4 *= 1-0.012
+            if self.shift=='TauEnUp': p4 *= 1+0.012
+            if self.shift=='TauEnDown': p4 *= 1-0.012
         else:
-            if self.shift=='MuonEnUp': p4 *= 1+0.03
-            if self.shift=='MuonEnDown': p4 *= 1-0.03
+            if self.shift=='TauEnUp': p4 *= 1+0.03
+            if self.shift=='TauEnDown': p4 *= 1-0.03
         return p4
 
     def pt(self):
