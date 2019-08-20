@@ -511,6 +511,8 @@ class MuMuTauTauAnalysis(AnalysisBase):
     def getGenCandidates(self):
         if 'SUSY' not in self.fileNames[0]:
             return {}
+        if 'HToAA_AToMuMu_AToTauTau' not in self.fileNames[0]:
+            return {}
         gmuons = [g for g in self.gen if abs(g.pdgId())==13]
         gtaus = [g for g in self.gen if abs(g.pdgId())==15]
         gas = [g for g in self.gen if abs(g.pdgId())==36]

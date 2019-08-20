@@ -32,6 +32,7 @@ latestNtuples = {
     '80XMuMuTauTau'        : '2018-05-01_DevTools_MuMuTauTauSkim_80X_v1', # Moriond 2017 (add hadronFlavour)
     '80XMuMuTauTauTrig'    : '2018-10-03_DevTools_MuMuTauTauSkim_triggerFilterOnly_slimmedTaus_80X_v1', 
     '80XMuMuTauTauTrigMC'  : '2018-10-03_DevTools_MuMuTauTauSkim_triggerFilterOnly_slimmedTausMuonCleaned_80X_v1', 
+    '80XMuMuTauTau4Tau'    : '2019-08-20_DevTools_MuMuTauTauSkim_80X_v1', 
     '80XMuMu'              : '2018-05-09_DevTools_80X_v1', # Moriond 2017
     #'80XMuMuTauTauUnclean' : '2018-03-09_DevTools_MuMuTauTauSkim_80X_uncleaned_v1', # Moriond 2017
     '80XMuMuTauTauZSkim'   : '2018-10-03_DevTools_MuMuTauTauZSkim_80X_v1', # Moriond 2017 (add hadronFlavour)
